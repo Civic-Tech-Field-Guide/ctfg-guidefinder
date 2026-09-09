@@ -1,4 +1,4 @@
-# guidefinder
+# ctfg-guidefinder
 
 A lightweight widget that recommends relevant [Civic Tech Field Guide](https://civictech.guide) [categories](https://app.civictech.guide/categories), [issues](https://app.civictech.guide/issues), and [communities](https://app.civictech.guide/communities) for any piece of text.
 
@@ -9,8 +9,8 @@ Pass it a paragraph, a page summary, or a theory of change — it returns up to 
 ## Quick start
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mstem/guidefinder@v1.0.0/guidefinder.css">
-<script src="https://cdn.jsdelivr.net/gh/mstem/guidefinder@v1.0.0/guidefinder.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Civic-Tech-Field-Guide/ctfg-guidefinder@v1.0.0/guidefinder.css">
+<script src="https://cdn.jsdelivr.net/gh/Civic-Tech-Field-Guide/ctfg-guidefinder@v1.0.0/guidefinder.js"></script>
 
 <div id="ctfg-recommendations" hidden></div>
 
