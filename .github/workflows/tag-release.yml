@@ -1,0 +1,58 @@
+# Cuts a patch tag whenever the widget source changes on main, so embedders
+# pinned to a major range (@1) pick the change up without editing their HTML,
+# and nobody has to remember to tag by hand.
+#
+# Push-triggered, never scheduled. Paths are limited to the two shipped files,
+# so a README or workflow edit does not burn a version number.
+name: Tag release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - guidefinder.js
+      - guidefinder.css
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tag-release
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bump patch version and push the tag
+        id: bump
+        run: |
+          set -euo pipefail
+          latest=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
+          if [ -z "$latest" ]; then
+            next=v1.0.0
+          else
+            IFS=. read -r major minor patch <<<"${latest#v}"
+            next="v${major}.${minor}.$((patch + 1))"
+          fi
+          echo "Previous tag: ${latest:-none}. New tag: $next"
+          git tag "$next"
+          git push origin "$next"
+          echo "tag=$next" >> "$GITHUB_OUTPUT"
+          echo "major=${next%%.*}" >> "$GITHUB_OUTPUT"
+
+      - name: Refresh the jsDelivr edge for the floating URLs
+        run: |
+          set -euo pipefail
+          repo="gh/${GITHUB_REPOSITORY}"
+          major="${{ steps.bump.outputs.major }}"
+          for file in guidefinder.js guidefinder.css; do
+            for ref in "@${major}" "@latest" ""; do
+              curl -sS -o /dev/null -w "purge %{http_code} ${repo}${ref}/${file}\n" \
+                "https://purge.jsdelivr.net/${repo}${ref}/${file}"
+            done
+          done

@@ -9,8 +9,8 @@ Pass it a paragraph, a page summary, or a theory of change — it returns up to 
 ## Quick start
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Civic-Tech-Field-Guide/ctfg-guidefinder@v1.0.0/guidefinder.css">
-<script src="https://cdn.jsdelivr.net/gh/Civic-Tech-Field-Guide/ctfg-guidefinder@v1.0.0/guidefinder.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Civic-Tech-Field-Guide/ctfg-guidefinder@1/guidefinder.css">
+<script src="https://cdn.jsdelivr.net/gh/Civic-Tech-Field-Guide/ctfg-guidefinder@1/guidefinder.js"></script>
 
 <div id="ctfg-recommendations" hidden></div>
 
@@ -22,11 +22,24 @@ Pass it a paragraph, a page summary, or a theory of change — it returns up to 
 </script>
 ```
 
-Always pin the CDN URL to a release tag or commit hash (`@v1.0.0`, never `@main`) so the code you embed can't change out from under you. For extra protection, add an [`integrity`](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) attribute:
+### Choosing a version
+
+`@1` tracks the newest `v1.x` release, so bug fixes and new result types reach your page without an HTML edit. A `v2.0.0` will never arrive this way, which is what keeps the range safe to follow.
+
+Never use `@main`. It serves whatever was pushed minutes ago, reviewed or not, and jsDelivr tells browsers to hold it for seven days, so it is neither safe nor fast.
+
+To freeze the code instead, pin an exact tag and add an [`integrity`](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity) attribute. Both go together: `integrity` only works against a URL whose bytes can never change, so it rules out `@1`.
+
+```html
+<script src="https://cdn.jsdelivr.net/gh/Civic-Tech-Field-Guide/ctfg-guidefinder@v1.0.0/guidefinder.js"
+        integrity="sha384-..." crossorigin="anonymous"></script>
+```
 
 ```sh
 openssl dgst -sha384 -binary guidefinder.js | openssl base64 -A
 ```
+
+Updates take up to 12 hours to clear the jsDelivr edge and up to seven days to clear a browser that already has the file. Neither `@1` nor an exact pin is instant.
 
 Or skip the CDN entirely — see [Self-hosting](#self-hosting-the-widget) below.
 
@@ -107,6 +120,12 @@ If the daily request cap is reached, the response includes `"dailyCapReached": t
 ## Self-hosting the widget
 
 Copy `guidefinder.js` and `guidefinder.css` into your project and update the script/link tags to point to your local copies. No build step required.
+
+---
+
+## Releases
+
+Pushing a change to `guidefinder.js` or `guidefinder.css` on `main` cuts the next patch tag automatically and clears the jsDelivr edge for the floating URLs. See `.github/workflows/tag-release.yml`. Tag a `v2.0.0` by hand for a breaking change, so `@1` embeds stay on the old major.
 
 ---
 
