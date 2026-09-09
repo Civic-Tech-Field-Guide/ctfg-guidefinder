@@ -1,6 +1,6 @@
 # ctfg-guidefinder
 
-A lightweight widget that recommends relevant [Civic Tech Field Guide](https://civictech.guide) [categories](https://app.civictech.guide/categories), [issues](https://app.civictech.guide/issues), and [communities](https://app.civictech.guide/communities) for any piece of text.
+A lightweight widget that recommends relevant [Civic Tech Field Guide](https://civictech.guide) [categories](https://app.civictech.guide/categories), [issues](https://app.civictech.guide/issues), [communities](https://app.civictech.guide/communities), and locations for any piece of text.
 
 Pass it a paragraph, a page summary, or a theory of change — it returns up to 3 matching entries from the CTFG directory with links to explore further.
 
@@ -76,11 +76,23 @@ Content-Type: application/json
     }
   ],
   "issues": [...],
-  "communities": [...]
+  "communities": [...],
+  "locations": [
+    {
+      "name": "Lisbon",
+      "description": "Projects, tools, and organizations based in Lisbon.",
+      "softrUrl": "https://ctfg.softr.app/place/?recordId=recrdWsd1k74PkZ6Z",
+      "type": "location"
+    }
+  ]
 }
 ```
 
-Each result has `name`, `description`, `softrUrl`, and `type` (`"category"`, `"issue"`, or `"community"`).
+Each result has `name`, `description`, `softrUrl`, and `type` (`"category"`, `"issue"`, `"community"`, or `"location"`).
+
+### Locations
+
+Locations are country-level and city-level entries from the CTFG Locations directory, linking to that place's page. They are matched more conservatively than the other three types: a location is only returned when the text is substantially about that place, and at most one location appears in a result set. A passing mention, a conference venue, a byline, or a nationality used as an adjective does not qualify. Most texts get no location at all.
 
 If the daily request cap is reached, the response includes `"dailyCapReached": true` and empty arrays.
 

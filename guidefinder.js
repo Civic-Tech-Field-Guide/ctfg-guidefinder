@@ -1,7 +1,7 @@
 /*!
  * guidefinder.js
- * Recommend Civic Tech Field Guide categories, issues, and communities
- * for any piece of text. Calls the public CTFG API at civictech.guide.
+ * Recommend Civic Tech Field Guide categories, issues, communities, and
+ * locations for any piece of text. Calls the public CTFG API at civictech.guide.
  *
  * Usage:
  *   GuiFinder.show(containerEl, text [, options])
@@ -72,6 +72,7 @@
         ...(Array.isArray(payload.categories)  ? payload.categories  : []),
         ...(Array.isArray(payload.issues)       ? payload.issues      : []),
         ...(Array.isArray(payload.communities)  ? payload.communities : []),
+        ...(Array.isArray(payload.locations)    ? payload.locations   : []),
       ];
       if (!items.length || payload.dailyCapReached) {
         container.setAttribute('hidden', '');
